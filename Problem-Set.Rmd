@@ -5,6 +5,11 @@ date: "4/10/2021"
 output: html_document
 ---
 
+```{R}
+library(pacman)
+p_load(dplyr)
+```
+
 
 # Problem 1
 
@@ -22,7 +27,7 @@ size = 10000
 
 y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
-treatment = ifelse(y_1 > y_0, 1, 0)
+treatment = ifelse(y_1 > y_0 - 1000, 1, 0)
 
 data = data.frame(y_0, y_1, treatment)
 ```
@@ -30,14 +35,12 @@ data = data.frame(y_0, y_1, treatment)
 
 1. What is the average treatment effect in your sample? How does it compare to the true average treatment effect?
 
-The average treatment effect in my sample is close to the 
-
 True Average Treatment Effect is 1500
 
 Average Treatment Effect:
 
 ```{R}
-sample_ate = mean(y_1) - mean(y_0)
+sample_ate = mean(data[data$treatment == 1, "y_1"]) - mean(data[data$treatment == 0, "y_0"])
 sample_ate
 ```
 
@@ -47,17 +50,104 @@ Difference between True Average Treatment Effect and Sample Average Treatment Ef
 1500 - sample_ate
 ```
 
+FINISH
+
 2. What is the distribution of compliers, always takers, and never takers in your sample (i.e. what is P(A), P(C), and P(N))?
+
+```{R}
+#Always Takers
+#Always goes to college regardless of treatment status
+#Always Takers will go to college if in treatment and Y_1 > Y_0
+#Always Takers will go to college if not in treatment and Y_1 - 1000 > Y_0
+#If Y_1 - Y_0 > 1000 and Y_1 - Y_0 > 0, then individuals are always takers
+#Thus if Y_1 - Y_0 > 1000, individuals are always takers
+percent = data %>%
+  filter(y_1 - y_0 > 1000) %>%
+  summarize(always_takers = n()/size)
+
+
+#Never Takers
+#Never goes to college regardless of treatment status
+#Never Takers will not go to college if in treatment and Y_1 < Y_0
+#Never Takers will not go to college if not in treatment and Y_1 - 1000 < Y_0
+#If Y_1 - Y_0 < 1000 & Y_1 - Y_0 < 0, then individuals are never takers
+#Thus if Y_1 - Y_0 < 0, individuals are never takers
+percent[1,2] = data %>%
+  filter(y_1 - y_0 < 0) %>%
+  summarize(never_takers = n()/size)
+
+#Compliers
+#Complies with Treatment
+#Compliers go to college if in treatment and Y_1 > Y_0
+#Compliers do not go to college in not in treatment and Y_1 - 1000 < Y_0
+#If 0 < Y_1 - Y_0 < 1000, then individuals are compliers
+percent[1,3] = data %>%
+  filter(y_1 - y_0 <= 1000) %>%
+  filter(y_1 - y_0 >= 0) %>%
+  summarize(compliers = n()/size)
+
+percent$sum = sum(percent[1,])
+
+percent
+```
 
 3. What is the average impact of the training for compliers, always takers, and never takers in your sample?
 
-4. Why is it reasonable to assume there are no defiers given our assumptions about how people aremaking participation decisions?
+CHECK THIS PROBLEM
 
+```{R}
+#Average Impact of Training
 
+impact = data %>%
+  filter(y_1 - y_0 > 1000) %>%
+  summarize(always_takers = mean(y_1) - mean(y_0))
 
+impact[1,2] = data %>%
+  filter(y_1 - y_0 < 0) %>%
+  summarize(never_takers = mean(y_1) - mean(y_0))
 
+impact[1,3] = data %>%
+  filter(y_1 - y_0 <= 1000) %>%
+  filter(y_1 - y_0 >= 0) %>%
+  summarize(compliers = mean(y_1) - mean(y_0))
+
+impact
+
+#impact[1,1] * percent[1,1] + impact[1,2] * percent[1,2] + impact[1,3] * percent[1,3]
+```
+
+4. Why is it reasonable to assume there are no defiers given our assumptions about how people are making participation decisions?
+
+It is reasonable to assume there are no defiers given our assumption because individuals are either better off with treatment (always-takers), without treatment (never-takers), or with treatment if provided (compliers). Specifically to be a defier, it must be the case that:
+
+Defiers go to college if not in treatment which implies $Y_1 - 1000 > Y_0$
+
+Defiers choose to not go to college if in treatment which implies $Y_1 < Y_0$
+
+Thus to be a defier, it must be that $ 0 > Y_1 - Y_0 > 1000$ which is impossible.
 
 
 \newpage
+
+
+
+So far, we have been using the full sample because we observe both potential outcomes. Now, let’s pretend we are in the real world and only observe the outcome that results from someone’s participation decision. To this end, randomly assign half of your sample to a treatment group and half to a control group. Generate an indicator P that equals 1 if someone receives the training and 0 otherwise. Remember: we have assumed people make participation decisions entirely based on their earnings with or without the training less any costs of the training. This should depend on the observations treatment status.
+
+Generate a variable Y equal to observed earnings using the following formula:
+
+$$
+Y = PY_1 + (1-P)Y_0
+$$
+
+```{R}
+
+```
+
+
+
+
+
+
+
 
 
