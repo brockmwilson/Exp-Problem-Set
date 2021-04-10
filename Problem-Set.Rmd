@@ -1,30 +1,41 @@
 ---
-title: "Exp-Problem-Set"
+title: "Experimental Problem Set"
 author: "Brock Wilson"
 date: "4/10/2021"
 output: html_document
 ---
-d
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+
+# Problem 1
+
+For this exercise, assume we are evaluating the impact of earning a certificate from a community college on a worker’s earnings. If someone is in the treatment group, they receive the training for free. But someone in the control group can pay to enroll in the program on their own for 1,000. Simulate a sample of 10,000 observations from the following data generating process:
+
+$$
+Y_0 \sim N(20000, 7000^2) \\
+Y_1 \sim N(21500, 8000^2)
+$$
+
+```{R}
+size = 10000
+
+y_0 = rnorm(n = size, mean = 20000, sd = 7000)
+y_1 = rnorm(n = size, mean = 21500, sd = 8000)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+1. What is the average treatment effect in your sample? How does it compare to the true average treatment effect?
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+2. What is the distribution of compliers, always takers, and never takers in your sample (i.e. what is P(A), P(C), and P(N))?
 
-```{r cars}
-summary(cars)
-```
+3. What is the average impact of the training for compliers, always takers, and never takers in your sample?
 
-## Including Plots
+4. Why is it reasonable to assume there are no defiers given our assumptions about how people aremaking participation decisions?
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+\newpage
+
+
