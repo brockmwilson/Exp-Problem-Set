@@ -8,6 +8,8 @@ output: html_document
 
 # Problem 1
 
+In class, we discussed the Roy (1951) model of selection based on comparative advantage. In this problem, we will simulate a slight extension of the Roy Model to better understand non-compliance and local average treatment effects. Specifically, we will assume people make participation decisions entirely based on their earnings with or without the training less any costs of the training. The extension is accounting for the fact that different choices might have different costs.
+
 For this exercise, assume we are evaluating the impact of earning a certificate from a community college on a worker’s earnings. If someone is in the treatment group, they receive the training for free. But someone in the control group can pay to enroll in the program on their own for 1,000. Simulate a sample of 10,000 observations from the following data generating process:
 
 $$
@@ -20,10 +22,30 @@ size = 10000
 
 y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
+treatment = ifelse(y_1 > y_0, 1, 0)
+
+data = data.frame(y_0, y_1, treatment)
 ```
 
 
 1. What is the average treatment effect in your sample? How does it compare to the true average treatment effect?
+
+The average treatment effect in my sample is close to the 
+
+True Average Treatment Effect is 1500
+
+Average Treatment Effect:
+
+```{R}
+sample_ate = mean(y_1) - mean(y_0)
+sample_ate
+```
+
+Difference between True Average Treatment Effect and Sample Average Treatment Effect
+
+```{R}
+1500 - sample_ate
+```
 
 2. What is the distribution of compliers, always takers, and never takers in your sample (i.e. what is P(A), P(C), and P(N))?
 
