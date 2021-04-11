@@ -228,7 +228,7 @@ table$weights = table$N/sum(table$N)*table$block_variance/total_var
 sum(table$weights*table$treatment_effect)
 ```
 
-
+\newpage
 
 
 
