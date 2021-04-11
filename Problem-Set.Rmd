@@ -230,6 +230,43 @@ sum(table$weights*table$treatment_effect)
 
 \newpage
 
+# Problem 4
+
+In class, we saw how Moulton’s design effect can be used to approximate the impact of clustering on our standard error. This problem will give you practice using this adjustment.
+
+Imagine you are considering running a cluster randomized experiment with 10,000 observations split evenly across 118 clusters. You will randomly assign half of clusters to treatment and control. Your main outcome of interest is a binary variable that historically has equaled one for 72.9 percent of observations.
+
+1. What is your minimum detectable effect if the intracluster correlation is 0? 
+
+2. What is your minimum detectable effect if the intracluster correlation is 0.2?
+
+3. How do these answers change if you can control for baseline characteristics that explain 20 percent of residual variation?
+
+
+\newpage
+
+# Problem 5
+
+We often focus on identifying and estimating average treatment effects like:
+
+$$
+E[Y | T = 1] - E[Y | T = 0]E[Y | T = 1] - E[Y | T = 0]
+$$
+
+Discuss why this rule implies that the variance of treatment effects is not identified by randomization into treatment or control alone.
+
+Propose an additional assumption that would allow you to identify the variance of treatment effects. Is it plausible?
+
+
+
+
+
+
+
+
+
+
+
 
 
 
