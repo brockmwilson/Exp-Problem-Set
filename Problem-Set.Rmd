@@ -2,10 +2,12 @@
 title: "Experimental Problem Set"
 author: "Brock Wilson"
 date: "4/10/2021"
-output: html_document
+output:
+  html_document:
+    df_print: paged
 ---
 
-```{R}
+```{R, echo = FALSE}
 library(pacman)
 p_load(dplyr)
 ```

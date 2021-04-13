@@ -1,0 +1,621 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Experimental Problem Set},
+  pdfauthor={Brock Wilson},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Experimental Problem Set}
+\author{Brock Wilson}
+\date{4/10/2021}
+
+\begin{document}
+\maketitle
+
+\hypertarget{problem-1}{%
+\section{Problem 1}\label{problem-1}}
+
+In class, we discussed the Roy (1951) model of selection based on
+comparative advantage. In this problem, we will simulate a slight
+extension of the Roy Model to better understand non-compliance and local
+average treatment effects. Specifically, we will assume people make
+participation decisions entirely based on their earnings with or without
+the training less any costs of the training. The extension is accounting
+for the fact that different choices might have different costs.
+
+For this exercise, assume we are evaluating the impact of earning a
+certificate from a community college on a worker's earnings. If someone
+is in the treatment group, they receive the training for free. But
+someone in the control group can pay to enroll in the program on their
+own for 1,000. Simulate a sample of 10,000 observations from the
+following data generating process:
+
+\[
+Y_0 \sim N(20000, 7000^2) \\
+Y_1 \sim N(21500, 8000^2)
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{size }\OtherTok{=} \DecValTok{10000}
+
+\NormalTok{y\_0 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =}\NormalTok{ size, }\AttributeTok{mean =} \DecValTok{20000}\NormalTok{, }\AttributeTok{sd =} \DecValTok{7000}\NormalTok{)}
+\NormalTok{y\_1 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =}\NormalTok{ size, }\AttributeTok{mean =} \DecValTok{21500}\NormalTok{, }\AttributeTok{sd =} \DecValTok{8000}\NormalTok{)}
+\NormalTok{decision }\OtherTok{=} \FunctionTok{ifelse}\NormalTok{(y\_1 }\SpecialCharTok{\textgreater{}}\NormalTok{ y\_0 }\SpecialCharTok{{-}} \DecValTok{1000}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+
+\NormalTok{df }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(y\_0, y\_1, decision)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What is the average treatment effect in your sample? How does it
+  compare to the true average treatment effect?
+\end{enumerate}
+
+True Average Treatment Effect is 1500
+
+Average Treatment Effect:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sample\_ate }\OtherTok{=} \FunctionTok{mean}\NormalTok{(df[df}\SpecialCharTok{$}\NormalTok{decision }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, }\StringTok{"y\_1"}\NormalTok{]) }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(df[df}\SpecialCharTok{$}\NormalTok{decision }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, }\StringTok{"y\_0"}\NormalTok{])}
+\NormalTok{sample\_ate}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1019.282
+\end{verbatim}
+
+Difference between True Average Treatment Effect and Sample Average
+Treatment Effect
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1500} \SpecialCharTok{{-}}\NormalTok{ sample\_ate}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 480.7184
+\end{verbatim}
+
+FINISH
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  What is the distribution of compliers, always takers, and never takers
+  in your sample (i.e.~what is P(A), P(C), and P(N))?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Always Takers}
+\CommentTok{\#Always goes to college regardless of treatment status}
+\CommentTok{\#Always Takers will go to college if in treatment and Y\_1 \textgreater{} Y\_0}
+\CommentTok{\#Always Takers will go to college if not in treatment and Y\_1 {-} 1000 \textgreater{} Y\_0}
+\CommentTok{\#If Y\_1 {-} Y\_0 \textgreater{} 1000 and Y\_1 {-} Y\_0 \textgreater{} 0, then individuals are always takers}
+\CommentTok{\#Thus if Y\_1 {-} Y\_0 \textgreater{} 1000, individuals are always takers}
+\NormalTok{percent }\OtherTok{=}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textgreater{}} \DecValTok{1000}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{always\_takers =} \FunctionTok{n}\NormalTok{()}\SpecialCharTok{/}\NormalTok{size)}
+
+
+\CommentTok{\#Never Takers}
+\CommentTok{\#Never goes to college regardless of treatment status}
+\CommentTok{\#Never Takers will not go to college if in treatment and Y\_1 \textless{} Y\_0}
+\CommentTok{\#Never Takers will not go to college if not in treatment and Y\_1 {-} 1000 \textless{} Y\_0}
+\CommentTok{\#If Y\_1 {-} Y\_0 \textless{} 1000 \& Y\_1 {-} Y\_0 \textless{} 0, then individuals are never takers}
+\CommentTok{\#Thus if Y\_1 {-} Y\_0 \textless{} 0, individuals are never takers}
+\NormalTok{percent[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{] }\OtherTok{=}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{never\_takers =} \FunctionTok{n}\NormalTok{()}\SpecialCharTok{/}\NormalTok{size)}
+
+\CommentTok{\#Compliers}
+\CommentTok{\#Complies with Treatment}
+\CommentTok{\#Compliers go to college if in treatment and Y\_1 \textgreater{} Y\_0}
+\CommentTok{\#Compliers do not go to college in not in treatment and Y\_1 {-} 1000 \textless{} Y\_0}
+\CommentTok{\#If 0 \textless{} Y\_1 {-} Y\_0 \textless{} 1000, then individuals are compliers}
+\NormalTok{percent[}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{] }\OtherTok{=}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textless{}=} \DecValTok{1000}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textgreater{}=} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{compliers =} \FunctionTok{n}\NormalTok{()}\SpecialCharTok{/}\NormalTok{size)}
+
+\NormalTok{percent}\SpecialCharTok{$}\NormalTok{sum }\OtherTok{=} \FunctionTok{sum}\NormalTok{(percent[}\DecValTok{1}\NormalTok{,])}
+
+\NormalTok{percent}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   always_takers never_takers compliers sum
+## 1        0.5206       0.4418    0.0376   1
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  What is the average impact of the training for compliers, always
+  takers, and never takers in your sample?
+\end{enumerate}
+
+CHECK THIS PROBLEM
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Average Impact of Training}
+
+\NormalTok{impact }\OtherTok{=}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textgreater{}} \DecValTok{1000}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{always\_takers =} \FunctionTok{mean}\NormalTok{(y\_1) }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(y\_0))}
+
+\NormalTok{impact[}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{] }\OtherTok{=}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{never\_takers =} \FunctionTok{mean}\NormalTok{(y\_1) }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(y\_0))}
+
+\NormalTok{impact[}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{] }\OtherTok{=}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textless{}=} \DecValTok{1000}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(y\_1 }\SpecialCharTok{{-}}\NormalTok{ y\_0 }\SpecialCharTok{\textgreater{}=} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{compliers =} \FunctionTok{mean}\NormalTok{(y\_1) }\SpecialCharTok{{-}} \FunctionTok{mean}\NormalTok{(y\_0))}
+
+\NormalTok{impact}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   always_takers never_takers compliers
+## 1      9669.758    -7925.623  518.2911
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#impact[1,1] * percent[1,1] + impact[1,2] * percent[1,2] + impact[1,3] * percent[1,3]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Why is it reasonable to assume there are no defiers given our
+  assumptions about how people are making participation decisions?
+\end{enumerate}
+
+It is reasonable to assume there are no defiers given our assumption
+because individuals are either better off with treatment
+(always-takers), without treatment (never-takers), or with treatment if
+provided (compliers). Specifically to be a defier, it must be the case
+that:
+
+Defiers go to college if not in treatment which implies
+\(Y_1 - 1000 > Y_0\)
+
+Defiers choose to not go to college if in treatment which implies
+\(Y_1 < Y_0\)
+
+Thus to be a defier, it must be that \$ 0 \textgreater{} Y\_1 - Y\_0
+\textgreater{} 1000\$ which is impossible.
+
+\newpage
+
+So far, we have been using the full sample because we observe both
+potential outcomes. Now, let's pretend we are in the real world and only
+observe the outcome that results from someone's participation decision.
+To this end, randomly assign half of your sample to a treatment group
+and half to a control group. Generate an indicator P that equals 1 if
+someone receives the training and 0 otherwise. Remember: we have assumed
+people make participation decisions entirely based on their earnings
+with or without the training less any costs of the training. This should
+depend on the observations treatment status.
+
+Generate a variable Y equal to observed earnings using the following
+formula:
+
+\[
+Y = PY_1 + (1-P)Y_0
+\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{treatment }\OtherTok{=} \FunctionTok{rbinom}\NormalTok{(}\AttributeTok{n =}\NormalTok{ size, }\AttributeTok{size =} \DecValTok{1}\NormalTok{, }\AttributeTok{prob =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{df }\OtherTok{=}\NormalTok{ df }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{y =}\NormalTok{ decision}\SpecialCharTok{*}\NormalTok{y\_1 }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{decision)}\SpecialCharTok{*}\NormalTok{y\_0)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Use a regression to estimate the intent-to-treat effect in your
+  sample. What is the point estimate and the 95\% confidence interval
+  around the estimate?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sum1 }\OtherTok{=} \FunctionTok{summary}\NormalTok{(}\FunctionTok{lm}\NormalTok{(}\AttributeTok{data =}\NormalTok{ df, y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treatment))}
+
+\NormalTok{a }\OtherTok{=}\NormalTok{ sum1}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+\NormalTok{b }\OtherTok{=}\NormalTok{ sum1}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{sum1}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{]}
+\NormalTok{c }\OtherTok{=}\NormalTok{ sum1}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{] }\SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{sum1}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{]}
+
+\NormalTok{table }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(a,b,c)}
+\FunctionTok{colnames}\NormalTok{(table) }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{"Lower Bound"}\NormalTok{, }\StringTok{"Estimate"}\NormalTok{, }\StringTok{"Upper Bound"}\NormalTok{)}
+\NormalTok{table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Lower Bound Estimate Upper Bound
+## [1,]   -4.530482  248.117    4.530482
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Use two-stage least squares to estimate the local average treatment
+  effect in your sample. Comment on the point estimate and the 95\%
+  confidence interval around the estimate. How does this compare to the
+  effects we estimated earlier in this problem?
+\end{enumerate}
+
+ASK ABOUT!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{p\_load}\NormalTok{(fixest)}
+
+\CommentTok{\#First Stage}
+\FunctionTok{feols}\NormalTok{(}\AttributeTok{data =}\NormalTok{ df, y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treatment }\SpecialCharTok{|}\NormalTok{ decision)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## OLS estimation, Dep. Var.: y
+## Observations: 10,000 
+## Fixed-effects: decision: 2
+## Standard-errors: Clustered (decision) 
+##           Estimate Std. Error t value Pr(>|t|) 
+## treatment  -5.3592      3.525 -1.5204 0.370382 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## RMSE: 6,295.6     Adj. R2: 0.006084
+##                 Within R2: 1.812e-7
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Second Stage}
+\FunctionTok{summary}\NormalTok{(}\FunctionTok{lm}\NormalTok{(}\AttributeTok{data =}\NormalTok{ df, y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treatment))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ treatment, data = df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -26262.2  -4315.4   -306.8   4109.5  27430.1 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 25059.48      89.08 281.305   <2e-16 ***
+## treatment      -4.53     126.32  -0.036    0.971    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6316 on 9998 degrees of freedom
+## Multiple R-squared:  1.286e-07,  Adjusted R-squared:  -9.989e-05 
+## F-statistic: 0.001286 on 1 and 9998 DF,  p-value: 0.9714
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Reduced Form}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Re-run your code but drawing a sample of 1,000,000 observations
+  instead of 10,000. How does the estimated LATE compare to the earlier
+  treatment effects now?
+\end{enumerate}
+
+FIGURE OUT
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{size }\OtherTok{=} \DecValTok{1000000}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage
+
+\hypertarget{problem-2}{%
+\section{Problem 2}\label{problem-2}}
+
+Suppose a researcher is evaluating an experiment using a sample that
+consists of 50\% compliers, 25\% always takers, and 25\% never takers.
+The researcher decides to estimate the intent-to-treat effect but
+dropping people who did not comply with the treatment protocol from the
+sample. After dropping people who did not comply with their treatment
+assignment from the sample, what is the distribution of compliers,
+always takers, and never takers in the treatment group? In the control
+group? Why is this a problem?
+
+Solution:
+
+There would be no never takers in the treatment group (since they
+wouldn't comply with treatment), all of the always takers who were
+selected for treatment and all of the compliers who were selected for
+treatment. In the control group, there would be no always takers, some
+of the never takers who were selected for control and all of the
+compliers who were selected for treatment.
+
+This is a problem because we are still including the effect of never
+takers and always takers in our treatment effect. What we truly want to
+know is the effect of treatment for specifically those who complied.
+Never takers and always takers may skew our results and/or make our
+results not as generalizable.
+
+CHECK
+
+\newpage
+
+\hypertarget{problem-3}{%
+\section{Problem 3}\label{problem-3}}
+
+Table 1 below includes details about the total sample size, probability
+of treatment, and treatment effect within each of 5 blocks. What would
+the pooled treatment effect be if estimated using an OLS regression of
+the outcome on treatment and block fixed effects? How much weight does
+each block get in the pooled estimate?
+
+CHECK
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{block }\OtherTok{=} \FunctionTok{seq}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{)}
+\NormalTok{table }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(block)}
+\NormalTok{table}\SpecialCharTok{$}\NormalTok{N }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{200}\NormalTok{, }\DecValTok{200}\NormalTok{, }\DecValTok{300}\NormalTok{)}
+\NormalTok{table}\SpecialCharTok{$}\NormalTok{prob\_T }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.25}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.75}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{table}\SpecialCharTok{$}\NormalTok{treatment\_effect }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+
+\NormalTok{table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   block   N prob_T treatment_effect
+## 1     1 100   0.50               -1
+## 2     2 100   0.25                0
+## 3     3 200   0.50                1
+## 4     4 200   0.75                2
+## 5     5 300   0.10                3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Each blocks variance formula}
+\NormalTok{table}\SpecialCharTok{$}\NormalTok{block\_variance }\OtherTok{=}\NormalTok{ table}\SpecialCharTok{$}\NormalTok{prob\_T}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{table}\SpecialCharTok{$}\NormalTok{prob\_T)}\SpecialCharTok{*}\NormalTok{table}\SpecialCharTok{$}\NormalTok{N}
+\CommentTok{\#Number of treated individuals in each block}
+\NormalTok{table}\SpecialCharTok{$}\NormalTok{treated }\OtherTok{=}\NormalTok{ table}\SpecialCharTok{$}\NormalTok{N}\SpecialCharTok{*}\NormalTok{table}\SpecialCharTok{$}\NormalTok{prob\_T}
+\CommentTok{\#Total treatment probability}
+\NormalTok{treatedprob }\OtherTok{=} \FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{treated)}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{N)}
+\CommentTok{\#Total variance}
+\NormalTok{total\_var }\OtherTok{=}\NormalTok{ treatedprob}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{treatedprob)}\SpecialCharTok{*}\FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{N)}
+\CommentTok{\#Weights for each block}
+\NormalTok{table}\SpecialCharTok{$}\NormalTok{weights }\OtherTok{=}\NormalTok{ table}\SpecialCharTok{$}\NormalTok{N}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{N)}\SpecialCharTok{*}\NormalTok{table}\SpecialCharTok{$}\NormalTok{block\_variance}\SpecialCharTok{/}\NormalTok{total\_var}
+
+
+\FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{N}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{N))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{block\_variance}\SpecialCharTok{/}\NormalTok{total\_var)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7361416
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Pooled Treatment Effect}
+\FunctionTok{sum}\NormalTok{(table}\SpecialCharTok{$}\NormalTok{weights}\SpecialCharTok{*}\NormalTok{table}\SpecialCharTok{$}\NormalTok{treatment\_effect)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.2418917
+\end{verbatim}
+
+Note for future reference:
+
+Pooled Treatment Effect =
+\(\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b\).
+
+Let \(\sum_b n_b = N\). Assume \(\hat{\Delta}_b = c, \forall b\)
+
+\$\$ \sum\_b
+\dfrac{n_b}{N}\emph{\dfrac{Var(T_{i,b})}{Var(T_i)}}\hat{\Delta}\_b =
+c*\sum\_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \textbackslash{}
+
+= c*\sum\_b \dfrac{n_b}{N}*\dfrac{n_b*p_b*(1-p_b)}{N*p*(1-p)} \$\$
+Assume \(p = 0.5\) and \(p_b = 0.5, \forall b\)
+
+\[
+c*\sum_b \dfrac{n_b}{N}*\dfrac{n_b*p_b*(1-p_b)}{N*p*(1-p)} = c*\sum_b \dfrac{n_b^2}{N^2} \\
+\]
+
+\newpage
+
+\hypertarget{problem-4}{%
+\section{Problem 4}\label{problem-4}}
+
+In class, we saw how Moulton's design effect can be used to approximate
+the impact of clustering on our standard error. This problem will give
+you practice using this adjustment.
+
+Imagine you are considering running a cluster randomized experiment with
+10,000 observations split evenly across 118 clusters. You will randomly
+assign half of clusters to treatment and control. Your main outcome of
+interest is a binary variable that historically has equaled one for 72.9
+percent of observations.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  What is your minimum detectable effect if the intracluster correlation
+  is 0?
+\item
+  What is your minimum detectable effect if the intracluster correlation
+  is 0.2?
+\item
+  How do these answers change if you can control for baseline
+  characteristics that explain 20 percent of residual variation?
+\end{enumerate}
+
+\newpage
+
+\hypertarget{problem-5}{%
+\section{Problem 5}\label{problem-5}}
+
+We often focus on identifying and estimating average treatment effects
+like:
+
+\[
+E[Y | T = 1] - E[Y | T = 0]E[Y | T = 1] - E[Y | T = 0]
+\]
+
+Discuss why this rule implies that the variance of treatment effects is
+not identified by randomization into treatment or control alone.
+
+Propose an additional assumption that would allow you to identify the
+variance of treatment effects. Is it plausible?
+
+\end{document}
