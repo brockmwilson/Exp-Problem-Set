@@ -3,13 +3,14 @@ title: "Experimental Problem Set"
 author: "Brock Wilson"
 date: "4/10/2021"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
 
 ```{R, echo = FALSE}
 library(pacman)
-p_load(dplyr)
+p_load(dplyr, fixest)
 ```
 
 
@@ -152,9 +153,9 @@ df = df %>%
 ```{R}
 sum1 = summary(lm(data = df, y ~ treatment))
 
-a = sum1$coefficients[2,1]
-b = sum1$coefficients[2,1] + 2*sum1$coefficients[2,2]
-c = sum1$coefficients[2,1] - 2*sum1$coefficients[2,1]
+b = sum1$coefficients[2,1]
+c = sum1$coefficients[2,1] + 2*sum1$coefficients[2,2]
+a = sum1$coefficients[2,1] - 2*sum1$coefficients[2,2]
 
 table = cbind(a,b,c)
 colnames(table) = c("Lower Bound", "Estimate", "Upper Bound")
@@ -166,8 +167,6 @@ table
 ASK ABOUT!
 
 ```{R}
-p_load(fixest)
-
 #First Stage
 feols(data = df, y ~ treatment | decision)
 #Second Stage
@@ -198,10 +197,6 @@ There would be no never takers in the treatment group (since they wouldn't compl
 This is a problem because we are still including the effect of never takers and always takers in our treatment effect. What we truly want to know is the effect of treatment for specifically those who complied. Never takers and always takers may skew our results and/or make our results not as generalizable. 
 
 CHECK
-
-```{R}
-
-```
 
 \newpage
 
@@ -240,26 +235,6 @@ sum(table$block_variance/total_var)
 #Pooled Treatment Effect
 sum(table$weights*table$treatment_effect)
 ```
-
-Note for future reference:
-
-Pooled Treatment Effect = $\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b$.
-
-Let $\sum_b n_b = N$. Assume $\hat{\Delta}_b = c, \forall b$
-
-$$
-\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b = c*\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \\
-
-= c*\sum_b \dfrac{n_b}{N}*\dfrac{n_b*p_b*(1-p_b)}{N*p*(1-p)}
-$$
-Assume $p = 0.5$ and $p_b = 0.5, \forall b$
-
-$$
-c*\sum_b \dfrac{n_b}{N}*\dfrac{n_b*p_b*(1-p_b)}{N*p*(1-p)} = c*\sum_b \dfrac{n_b^2}{N^2} \\
-$$
-
-
-
 
 \newpage
 
