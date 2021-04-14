@@ -165,11 +165,8 @@ table
 ASK ABOUT!
 
 ```{R}
-#First Stage
+#2SLS Regression
 feols(data = df, y ~ treatment | decision)
-#Second Stage
-summary(lm(data = df, y ~ treatment))
-#Reduced Form
 ```
 
 7. Re-run your code but drawing a sample of 1,000,000 observations instead of 10,000. How does the estimated LATE compare to the earlier treatment effects now?
@@ -178,6 +175,7 @@ FIGURE OUT
 
 ```{R}
 size = 1000000
+feols(data = df, y ~ treatment | decision)
 ```
 
 
@@ -247,6 +245,53 @@ Imagine you are considering running a cluster randomized experiment with 10,000 
 2. What is your minimum detectable effect if the intracluster correlation is 0.2?
 
 3. How do these answers change if you can control for baseline characteristics that explain 20 percent of residual variation?
+
+### Solution:
+
+#### Part 1
+
+Need to find $\delta$
+
+Given:
+$$
+t_{\alpha/2} = \dfrac{\hat{\Delta}-0}{S.E.(\hat{\Delta})} \\
+-t_{\beta} = \dfrac{\hat{\Delta}-\delta}{S.E.(\hat{\Delta})}
+$$
+
+Solving for $\delta$:
+
+\begin{align*}
+\delta &= \hat{\Delta} + S.E.(\hat{\Delta}) \\
+\delta &= (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{\sigma^2}{N*Var(T_i)}}
+\end{align*}
+
+where $t_{\alpha/2} = 1.96$, $t_{\beta} = 0.84$, $N = 10000$, $Var(T_i) = n*p*(1-p) = 10000*0.5*0.5$, $\sigma^2 = ?$
+
+#### Part 2
+
+\begin{align*}
+\delta &= \hat{\Delta} + S.E.(\hat{\Delta}) \\
+\delta &= (t_{\alpha/2} + t_{\beta})*S.E.(\hat{\Delta}) \\
+\delta &= (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{\sigma^2*(1+(n-1)*\rho)}{N*Var(T_i)}}
+\end{align*}
+
+where $t_{\alpha/2} = 1.96$, $t_{\beta} = 0.84$, $N = 10000$, $Var(T_i) = n*p*(1-p) = 10000*0.5*0.5$, $n = \dfrac{10000}{118}$, $\rho = 0.2$ and $\sigma^2 = ?$.
+
+#### Part 3
+
+Part 1
+$$
+\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{(1-R^2)*\sigma^2}{N*Var(T_i)}}
+$$
+
+Part 2
+$$
+\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{(1-R^2)*\sigma^2*(1+(n-1)*\rho)}{N*Var(T_i)}}
+$$
+
+For both of our answers, as our $R^2$ goes up, then the square rooted term becomes smaller. This means that we can detect a smaller $\delta$. This is good because before we may have detected an effect of 10, but now we could detect an effect of 8.
+
+CHECK!
 
 
 \newpage
