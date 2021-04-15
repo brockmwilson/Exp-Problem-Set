@@ -2,21 +2,23 @@
 title: "Extras"
 author: "Brock Wilson"
 date: "4/13/2021"
-output: html_document
+output: pdf_document
 ---
 
 Note for future reference:
 
 Pooled Treatment Effect = $\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b$.
 
-$\sum_b n_b = N$
+Question: Does $\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} = 1$?
+
+Given: $\sum_b n_b = N$
 
 \begin{align*}
 \sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} &= \sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \\
 &= \sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
 \end{align*}
 
-Assume $n_b = N/b$
+Assume $n_b = N/b$. (All the blocks have equal size)
 
 \begin{align*}
 \sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} &= \sum_b \dfrac{N/b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} \\
@@ -24,6 +26,8 @@ Assume $n_b = N/b$
 \end{align*}
 
 Let $b = 2$, $p_1 = 0.8$ and $p_2 = 0.4$
+
+Additionally $p = 0.6$. This is because you have a 50 percent chance of landing in group 1 or a 50 percent chance in landing in group 2. This implies probability of treatment equals $0.5*0.8 + 0.5*0.4 = 0.6$
 
 $$
 \sum_b \dfrac{1}{b}*\dfrac{p_b*(1-p_b)}{p*(1-p)} = \dfrac{1}{2}*\dfrac{0.8*(1-0.8)}{0.6*(1-0.6)} + \dfrac{1}{2}*\dfrac{0.4*(1-0.4)}{0.6*(1-0.6)}
