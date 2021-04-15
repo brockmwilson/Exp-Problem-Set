@@ -18,10 +18,10 @@ In class, we discussed the Roy (1951) model of selection based on comparative ad
 
 For this exercise, assume we are evaluating the impact of earning a certificate from a community college on a worker’s earnings. If someone is in the treatment group, they receive the training for free. But someone in the control group can pay to enroll in the program on their own for 1,000. Simulate a sample of 10,000 observations from the following data generating process:
 
-$$
+\begin{align*}
 Y_0 \sim N(20000, 7000^2) \\
 Y_1 \sim N(21500, 8000^2)
-$$
+\end{align*}
 
 ```{R}
 size = 10000
@@ -43,6 +43,9 @@ Average Treatment Effect:
 ```{R}
 sample_ate = mean(df[df$decision == 1, "y_1"]) - mean(df[df$decision == 0, "y_0"])
 sample_ate
+
+ate = mean(df$y_1 - df$y_0)
+ate
 ```
 
 Difference between True Average Treatment Effect and Sample Average Treatment Effect
@@ -125,7 +128,7 @@ Defiers go to college if not in treatment which implies $Y_1 - 1000 > Y_0$
 
 Defiers choose to not go to college if in treatment which implies $Y_1 < Y_0$
 
-Thus to be a defier, it must be that $ 0 > Y_1 - Y_0 > 1000$ which is impossible.
+Thus to be a defier, it must be that $0 > Y_1 - Y_0 > 1000$ which is impossible.
 
 
 \newpage
@@ -222,14 +225,16 @@ treatedprob = sum(table$treated)/sum(table$N)
 #Total variance
 total_var = treatedprob*(1-treatedprob)
 #Weights for each block
-table$weights = table$N/sum(table$N)*table$block_variance/total_var
+table$weights = table$block_variance*table$N/(sum(table$N)*total_var)
 
 
-sum(table$N/sum(table$N))
-sum(table$block_variance/total_var)
+#sum(table$N/sum(table$N))
+#sum(table$block_variance/total_var)
 
 #Pooled Treatment Effect
-sum(table$weights)
+sum(table$weights*table$treatment_effect)
+
+table
 ```
 
 \newpage
@@ -280,7 +285,8 @@ Thus altogether:
 $$
 \delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{\sigma^2}{N*Var(T_i)}} \\
 \delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{Var(\hat\Delta)*N*Var(T_i)}{N*Var(T_i)}} \\
-\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{Var(\hat\Delta)*N*Var(T_i)}{N*Var(T_i)}}
+\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{Var(\hat\Delta)*N*Var(T_i)}{N*Var(T_i)}} \\
+\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{Var(\hat\Delta)} \\
 $$
 
 #### Part 2
