@@ -221,15 +221,11 @@ table
 
 ```{R}
 #Each blocks variance formula
-table$block_variance = table$prob_T*(1-table$prob_T)
-#Number of treated individuals in each block
-table$treated = table$N*table$prob_T
-#Total treatment probability
-treatedprob = sum(table$treated)/sum(table$N)
+table$block_variance = table$prob_T*(1-table$prob_T)*table$N
 #Total variance
-total_var = treatedprob*(1-treatedprob)
+total_var = sum(table$block_variance)
 #Weights for each block
-table$weights = table$block_variance*table$N/(sum(table$N)*total_var)
+table$weights = table$block_variance/total_var
 
 
 #sum(table$N/sum(table$N))
