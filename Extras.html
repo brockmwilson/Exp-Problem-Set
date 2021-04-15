@@ -173,13 +173,31 @@ pre code {
 
 <p>Note for future reference:</p>
 <p>Pooled Treatment Effect = <span class="math inline">\(\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b\)</span>.</p>
-<p>Let <span class="math inline">\(\sum_b n_b = N\)</span>. Assume <span class="math inline">\(\hat{\Delta}_b = c, \forall b\)</span></p>
+<p><span class="math inline">\(\sum_b n_b = N\)</span></p>
+<p><span class="math display">\[\begin{align*}
+\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} &amp;= \sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \\
+&amp;= \sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
+\end{align*}\]</span></p>
+<p>Assume <span class="math inline">\(n_b = N/b\)</span></p>
+<p><span class="math display">\[\begin{align*}
+\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} &amp;= \sum_b \dfrac{N/b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} \\
+&amp;=\sum_b \dfrac{1}{b}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
+\end{align*}\]</span></p>
+<p>Let <span class="math inline">\(b = 2\)</span>, <span class="math inline">\(p_1 = 0.8\)</span> and <span class="math inline">\(p_2 = 0.4\)</span></p>
 <p><span class="math display">\[
-\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b = c*\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \\
-= c*\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
-\]</span> Assume <span class="math inline">\(p = 0.5\)</span> and <span class="math inline">\(p_b = 0.5, \forall b\)</span></p>
+\sum_b \dfrac{1}{b}*\dfrac{p_b*(1-p_b)}{p*(1-p)} = \dfrac{1}{2}*\dfrac{0.8*(1-0.8)}{0.6*(1-0.6)} + \dfrac{1}{2}*\dfrac{0.4*(1-0.4)}{0.6*(1-0.6)}
+\]</span></p>
+<p>Top of Fraction <span class="math display">\[
+0.5*0.8*(1-0.8) + 0.5*0.4*(1-0.4) \\
+0.08 + 0.12 \\
+0.2
+\]</span> Bottom of Fraction <span class="math display">\[
+0.6*(1-0.6) \\
+0.24
+\]</span></p>
+<p>This means the weights sum to be</p>
 <p><span class="math display">\[
-c*\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} = c*\sum_b \dfrac{n_b}{N} \\
+\dfrac{0.2}{0.24} = 0.833
 \]</span></p>
 
 

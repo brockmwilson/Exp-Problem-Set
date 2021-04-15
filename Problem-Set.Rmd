@@ -267,6 +267,8 @@ t_{\alpha/2} = \dfrac{\hat{\Delta}-0}{S.E.(\hat{\Delta})} \\
 -t_{\beta} = \dfrac{\hat{\Delta}-\delta}{S.E.(\hat{\Delta})}
 $$
 
+
+
 Solving for $\delta$:
 
 \begin{align*}
@@ -279,19 +281,22 @@ where $t_{\alpha/2} = 1.96$, $t_{\beta} = 0.84$, $N = 10000$, $Var(T_i) = p*(1-p
 Lastly, we are interested in a binary variable that historically has equaled one for 72.9 percent of observations. Thus:
 
 $$
-Var(\hat\Delta) = N*p*(1-p) = 10000*0.729*(1-0.729) \\
-Var(\hat\Delta) = \dfrac{\sigma^2}{N*Var(T_i)} \\
-\sigma^2 = Var(\hat\Delta)*N*Var(T_i)
+Var(y_o) = (1-p)*p = 0.729*(1-0.729)= Var(\epsilon) = \sigma^2
+$$
+This means that 
+$$
+\delta = (1.96 + 0.84)*\sqrt{\dfrac{0.729*(1-0.729)}{10000*0.25}}
 $$
 
-Thus altogether:
+```{R, eval = FALSE, echo = FALSE}
+(1.96+0.84)*sqrt(0.729*(1-0.729)/(0.25*10000))
+```
 
-\begin{align*}
-\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{\sigma^2}{N*Var(T_i)}} \\
-\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{Var(\hat\Delta)*N*Var(T_i)}{N*Var(T_i)}} \\
-\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{Var(\hat\Delta)*N*Var(T_i)}{N*Var(T_i)}} \\
-\delta = (t_{\alpha/2} + t_{\beta})*\sqrt{Var(\hat\Delta)} \\
-\end{align*}
+
+$$
+\delta = 0.02489066
+$$
+
 
 #### Part 2
 
@@ -301,7 +306,23 @@ Thus altogether:
 \delta &= (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{\sigma^2*(1+(n-1)*\rho)}{N*Var(T_i)}}
 \end{align*}
 
-where $t_{\alpha/2} = 1.96$, $t_{\beta} = 0.84$, $N = 10000$, $Var(T_i) = p*(1-p) = 0.5*0.5$, $n = \dfrac{10000}{118}$, $\rho = 0.2$ and $\sigma^2 = ?$.
+where $t_{\alpha/2} = 1.96$, $t_{\beta} = 0.84$, $N = 10000$, $Var(T_i) = p*(1-p) = 0.5*0.5$, $n = \dfrac{10000}{118}$, $\rho = 0.2$ and $\sigma^2 = 0.729*(1-0.729)$.
+
+Thus:
+
+$$
+\delta = (1.96 + 0.84)*\sqrt{\dfrac{0.729*(1-0.729)(1+(\dfrac{10000}{118}-1)*0.2)}{10000*0.25}}
+$$
+
+```{R, eval = FALSE, echo = FALSE}
+(1.96+0.84)*sqrt(0.729*(1-0.729)*(1+(10000/118 - 1)*0.2)/(0.25*10000))
+```
+
+
+$$
+\delta = 0.1048637
+$$
+
 
 #### Part 3
 

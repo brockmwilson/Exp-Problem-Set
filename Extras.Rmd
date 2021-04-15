@@ -9,23 +9,19 @@ Note for future reference:
 
 Pooled Treatment Effect = $\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b$.
 
-Let $\sum_b n_b = N$. Assume $\hat{\Delta}_b = c, \forall b$
+$\sum_b n_b = N$
 
-$$
-\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b = c*\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \\
-= c*\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
-$$
+\begin{align*}
+\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} &= \sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \\
+&= \sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
+\end{align*}
+
 Assume $n_b = N/b$
 
-$$
-c*\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} = c*\sum_b \dfrac{N/b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
-$$
-
-
-
-$$
-=c*\sum_b \dfrac{1}{b}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
-$$
+\begin{align*}
+\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} &= \sum_b \dfrac{N/b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} \\
+&=\sum_b \dfrac{1}{b}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
+\end{align*}
 
 Let $b = 2$, $p_1 = 0.8$ and $p_2 = 0.4$
 
@@ -34,18 +30,27 @@ $$
 $$
 
 
-What is
+Top of Fraction
 $$
-0.8*(1-0.8) + 0.4*(1-0.4) \\
-0.16 + 0.24 \\
-0.4
+0.5*0.8*(1-0.8) + 0.5*0.4*(1-0.4) \\
+0.08 + 0.12 \\
+0.2
 $$
-Where as
-
+Bottom of Fraction
 $$
 0.6*(1-0.6) \\
 0.24
 $$
+
+This means the weights sum to be
+
+$$
+\dfrac{0.2}{0.24} = 0.833
+$$
+
+
+
+
 
 
 
