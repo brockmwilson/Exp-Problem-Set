@@ -15,9 +15,42 @@ $$
 \sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)}*\hat{\Delta}_b = c*\sum_b \dfrac{n_b}{N}*\dfrac{Var(T_{i,b})}{Var(T_i)} \\
 = c*\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
 $$
-Assume $p = 0.5$ and $p_b = 0.5, \forall b$
+Assume $n_b = N/b$
 
 $$
-c*\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} = c*\sum_b \dfrac{n_b}{N} \\
+c*\sum_b \dfrac{n_b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)} = c*\sum_b \dfrac{N/b}{N}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
 $$
+
+
+
+$$
+=c*\sum_b \dfrac{1}{b}*\dfrac{p_b*(1-p_b)}{p*(1-p)}
+$$
+
+Let $b = 2$, $p_1 = 0.8$ and $p_2 = 0.4$
+
+$$
+\sum_b \dfrac{1}{b}*\dfrac{p_b*(1-p_b)}{p*(1-p)} = \dfrac{1}{2}*\dfrac{0.8*(1-0.8)}{0.6*(1-0.6)} + \dfrac{1}{2}*\dfrac{0.4*(1-0.4)}{0.6*(1-0.6)}
+$$
+
+
+What is
+$$
+0.8*(1-0.8) + 0.4*(1-0.4) \\
+0.16 + 0.24 \\
+0.4
+$$
+Where as
+
+$$
+0.6*(1-0.6) \\
+0.24
+$$
+
+
+
+
+
+
+
 
