@@ -9,6 +9,7 @@ output:
 ```{R, echo = FALSE}
 library(pacman)
 p_load(dplyr, fixest, ivreg)
+library(ggplot2)
 ```
 
 
@@ -167,6 +168,37 @@ ASK ABOUT!
 ivreg(data = df, y ~ treatment | decision)
 ```
 
+```{R}
+size = 1000
+dist1 = data.frame(matrix(nrow = size, ncol = 1, data = 0))
+colnames(dist1) = "EstimatesOLS"
+dist2 = data.frame(matrix(nrow = size, ncol = 1, data = 0))
+colnames(dist2) = "EstimatesIV"
+
+for (i in 1:1000){
+y_0 = rnorm(n = size, mean = 20000, sd = 7000)
+y_1 = rnorm(n = size, mean = 21500, sd = 8000)
+decision = ifelse(y_1 > y_0 - 1000, 1, 0)
+df = data.frame(y_0, y_1, decision)
+df$treatment = rbinom(n = size, size = 1, prob = 0.5)
+df = df %>%
+  mutate(y = decision*y_1 + (1-decision)*y_0)
+a = summary(lm(data = df, y ~ treatment))
+b = ivreg(data = df, y ~ treatment | decision)
+
+dist1[i,1] = a$coefficients[2,1]
+dist2[i,1] = b$coefficients[2]
+}
+
+ggplot(dist1, aes(x=EstimatesOLS)) + 
+  geom_density()
+
+ggplot(dist2, aes(x=EstimatesIV)) + 
+  geom_density()
+
+```
+
+
 7. Re-run your code but drawing a sample of 1,000,000 observations instead of 10,000. How does the estimated LATE compare to the earlier treatment effects now?
 
 FIGURE OUT
@@ -180,7 +212,6 @@ df = data.frame(y_0, y_1, decision)
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
-
 summary(lm(data = df, y ~ treatment))
 ivreg(data = df, y ~ treatment | decision)
 ```
@@ -199,6 +230,7 @@ There would be no never takers in the treatment group (since they wouldn't compl
 
 This is a problem because we are still including the effect of never takers and always takers in our treatment effect. What we truly want to know is the effect of treatment for specifically those who complied. Never takers and always takers may skew our results and/or make our results not as generalizable. 
 
+This is illustrated well in Problem 1. If it is the case that by randomization, only never takers are in the control group and compliers in the treatment group, then we will see a negative effect. This is because the never takers have a high income without community college and compliers will often have a lower return from community college.
 CHECK
 
 \newpage
@@ -226,10 +258,6 @@ table$block_variance = table$prob_T*(1-table$prob_T)*table$N
 total_var = sum(table$block_variance)
 #Weights for each block
 table$weights = table$block_variance/total_var
-
-
-#sum(table$N/sum(table$N))
-#sum(table$block_variance/total_var)
 
 #Pooled Treatment Effect
 sum(table$weights*table$treatment_effect)
@@ -327,12 +355,21 @@ $$
 \delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{(1-R^2)*\sigma^2}{N*Var(T_i)}}
 $$
 
+$$
+\delta = 0.02489066 * \sqrt(1-R^2)
+$$
+
+
 Part 2
 $$
 \delta = (t_{\alpha/2} + t_{\beta})*\sqrt{\dfrac{(1-R^2)*\sigma^2*(1+(n-1)*\rho)}{N*Var(T_i)}}
 $$
 
-For both of our answers, as our $R^2$ goes up, then the square rooted term becomes smaller. This means that we can detect a smaller $\delta$. This is good because before we may have detected an effect of 10, but now we could detect an effect of 8.
+$$
+\delta = 0.1048637 * \sqrt(1-R^2)
+$$
+
+For both of our answers, as our $R^2$ goes up, then the square rooted term becomes smaller. This means that we can detect a smaller $\delta$. This is good because before we may have detected an effect of 0.10, but now we could detect an effect of 0.09.
 
 CHECK!
 
