@@ -8,8 +8,7 @@ output:
 
 ```{R, echo = FALSE}
 library(pacman)
-p_load(dplyr, fixest, ivreg)
-library(ggplot2)
+p_load(dplyr, fixest, ivreg, ggplot2)
 ```
 
 
@@ -139,14 +138,26 @@ $$
 Y = PY_1 + (1-P)Y_0
 $$
 
-```{R}
+```{R, warning = FALSE}
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 
-df$decision = if (df$treatment == 1) {
-  ifelse(df$y_1-1000>df$y_0, 1, 0)
-} else {
-  ifelse(df$y_1>df$y_0, 1, 0)
-}
+#Option 1
+
+# df$decision = if (df$treatment == 1) {
+#   ifelse(df$y_1-1000>df$y_0, 1, 0)
+# } else {
+#   ifelse(df$y_1>df$y_0, 1, 0)
+# }
+
+#Option 2
+
+df$decision = df$treatment #Compliers
+df$decision = ifelse(df$y_1 < df$y_0, 0, 1) #Never Takers
+df$decision = ifelse(df$y_1 - 1000 > df$y_0, 1, 0) #Always Takers
+
+# a = sum(ifelse(df$y_1 < df$y_0, 0, 1))
+# b = sum(ifelse(df$y_1 - 1000 > df$y_0, 1, 0))
+# a+b
 
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
@@ -168,16 +179,30 @@ table
 
 6. Use two-stage least squares to estimate the local average treatment effect in your sample. Comment on the point estimate and the 95% confidence interval around the estimate. How does this compare to the effects we estimated earlier in this problem?
 
-ASK ABOUT!
+Solution:
 
-THIS IS A PROBLEM BC OF THE WEAK INSTRUMENTS
+ALSO COULD BE A RELEVANCE ISSUE??
+
+The confidence interval and point estimate are significantly different from problem 5. This is due to a weak instrument. The problem is that we are instrumenting decision with treatment, however treatment is a weak instrument. We can see this one of two ways. In the summary of the IV regression, we see that treatment is a weak instrument. Additionally, we can take a look at the first stage regression. Both show the same result, that treatment is weak instrument. This is a problem because a weak instrument will be biased, but be consistent as n approaches infinity. Additionally, the estimated standard error will be too small. I add in a grab to show the distribution of the estimates which has a wider distribution compared to the OLS estimates.
 
 ```{R}
 #2SLS Regression
-summary(ivreg(data = df, y ~ decision | treatment))
+sum1 = summary(ivreg(data = df, y ~ decision | treatment))
+sum1
+
+summary(lm(data = df, decision ~ treatment))
+
+b = sum1$coefficients[2,1]
+c = sum1$coefficients[2,1] + 2*sum1$coefficients[2,2]
+a = sum1$coefficients[2,1] - 2*sum1$coefficients[2,2]
+
+table = cbind(a,b,c)
+colnames(table) = c("Lower Bound", "Estimate", "Upper Bound")
+table
 ```
 
-```{R, warning = FALSE}
+
+```{R, warning = FALSE, cache = TRUE}
 size = 1000
 dist1 = data.frame(matrix(nrow = size, ncol = 1, data = 0))
 colnames(dist1) = "EstimatesOLS"
@@ -189,11 +214,11 @@ y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
 df = data.frame(y_0, y_1)
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
-df$decision = if (df$treatment == 1) {
-  ifelse(df$y_1-1000>df$y_0, 1, 0)
-} else {
-  ifelse(df$y_1>df$y_0, 1, 0)
-}
+
+df$decision = df$treatment #Compliers
+df$decision = ifelse(df$y_1 < df$y_0, 0, 1) #Never Takers
+df$decision = ifelse(df$y_1 - 1000 > df$y_0, 1, 0) #Always Takers
+
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
 a = summary(lm(data = df, y ~ treatment))
@@ -214,9 +239,9 @@ ggplot(dist2, aes(x=EstimatesIV)) +
 
 7. Re-run your code but drawing a sample of 1,000,000 observations instead of 10,000. How does the estimated LATE compare to the earlier treatment effects now?
 
-FIGURE OUT
+The estimated LATE is no better off as we increase the sample size. This is because of the problem before, we have a weak instrument.
 
-```{R}
+```{R, warning = FALSE}
 size = 1000000
 y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
@@ -224,11 +249,35 @@ df = data.frame(y_0, y_1)
 
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 
-df$decision = if (df$treatment == 1) {
-  ifelse(df$y_1-1000>df$y_0, 1, 0)
-} else {
-  ifelse(df$y_1>df$y_0, 1, 0)
-}
+#Option 1
+# 
+# df$decision1 = if (df$treatment == 1) {
+#   ifelse(df$y_1>df$y_0, 1, 0)
+# } else {
+#   ifelse(df$y_1 - 1000>df$y_0, 1, 0)
+# }
+
+#Option 2
+df= data.table::data.table(df)
+p_load(data.table)
+df[treatment == 1, decision := ifelse(y_1 > y_0, 1, 0)]
+df[treatment == 0, decision := ifelse(y_1 - 1000 > y_0, 1, 0)]
+
+# Option 3
+df$decision1 = ifelse((df$treatment==1 & df$y_1 > df$y_0 )|(df$treatment==0 & df$y_1-1000> df$y_0),1,0)
+
+
+df$decision2 = df$decision1 - df$decision
+
+ sum(df$decision4)
+
+# a = sum(ifelse(df$y_1 < df$y_0, 0, 1))
+# b = sum(ifelse(df$y_1 - 1000 > df$y_0, 1, 0))
+# a+b
+#Option 3
+#df$decision = df$treatment
+
+
 
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
@@ -236,8 +285,6 @@ df = df %>%
 summary(lm(data = df, y ~ treatment))
 summary(ivreg(data = df, y ~ decision | treatment))
 ```
-
-CHECK CHECK CHECK CHECK CHECK CHECK CHECK
 
 \newpage
 
@@ -257,6 +304,8 @@ This is illustrated well in Problem 1. If it is the case that by randomization, 
 E(Y_{1,i} - Y_{0,i} | T_i) &= E(Y_{1,i}|T_i) - E(Y_{0,i}|T_i) \\
 &= [P(C)*E(Y_{1,C}|T_i) + P(A)*E(Y_{1,A}|T_i)] - [P(C)*E(Y_{1,C}|T_i) + P(N)*E(Y_{1,N}|T_i)]
 \end{align*}
+
+We can see that our expected value still contains 
 
 
 CHECK
