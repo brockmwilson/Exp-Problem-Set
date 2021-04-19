@@ -177,7 +177,7 @@ THIS IS A PROBLEM BC OF THE WEAK INSTRUMENTS
 summary(ivreg(data = df, y ~ decision | treatment))
 ```
 
-```{R}
+```{R, warning = FALSE}
 size = 1000
 dist1 = data.frame(matrix(nrow = size, ncol = 1, data = 0))
 colnames(dist1) = "EstimatesOLS"
@@ -189,6 +189,11 @@ y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
 df = data.frame(y_0, y_1)
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
+df$decision = if (df$treatment == 1) {
+  ifelse(df$y_1-1000>df$y_0, 1, 0)
+} else {
+  ifelse(df$y_1>df$y_0, 1, 0)
+}
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
 a = summary(lm(data = df, y ~ treatment))
@@ -217,9 +222,7 @@ y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
 df = data.frame(y_0, y_1)
 
-#df$treatment = rbinom(n = size, size = 1, prob = 0.5)
-df$treatment = 0
-df$treatment[1:500000] = 1
+df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 
 df$decision = if (df$treatment == 1) {
   ifelse(df$y_1-1000>df$y_0, 1, 0)
@@ -249,6 +252,13 @@ There would be no never takers in the treatment group (since they wouldn't compl
 This is a problem because we are still including the effect of never takers and always takers in our treatment effect. What we truly want to know is the effect of treatment for specifically those who complied. Never takers and always takers may skew our results and/or make our results not as generalizable. 
 
 This is illustrated well in Problem 1. If it is the case that by randomization, only never takers are in the control group and compliers in the treatment group, then we will see a negative effect. This is because the never takers have a high income without community college and compliers will often have a lower return from community college.
+
+\begin{align*}
+E(Y_{1,i} - Y_{0,i} | T_i) &= E(Y_{1,i}|T_i) - E(Y_{0,i}|T_i) \\
+&= [P(C)*E(Y_{1,C}|T_i) + P(A)*E(Y_{1,A}|T_i)] - [P(C)*E(Y_{1,C}|T_i) + P(N)*E(Y_{1,N}|T_i)]
+\end{align*}
+
+
 CHECK
 
 \newpage
@@ -305,7 +315,9 @@ Need to find $\delta$
 
 Given:
 $$
-t_{\alpha/2} = \dfrac{\hat{\Delta}-0}{S.E.(\hat{\Delta})} \\
+t_{\alpha/2} = \dfrac{\hat{\Delta}-0}{S.E.(\hat{\Delta})}
+$$
+$$
 -t_{\beta} = \dfrac{\hat{\Delta}-\delta}{S.E.(\hat{\Delta})}
 $$
 
