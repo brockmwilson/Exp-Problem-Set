@@ -264,19 +264,7 @@ df[treatment == 1, decision := ifelse(y_1 > y_0, 1, 0)]
 df[treatment == 0, decision := ifelse(y_1 - 1000 > y_0, 1, 0)]
 
 # Option 3
-df$decision1 = ifelse((df$treatment==1 & df$y_1 > df$y_0 )|(df$treatment==0 & df$y_1-1000> df$y_0),1,0)
-
-
-df$decision2 = df$decision1 - df$decision
-
- sum(df$decision4)
-
-# a = sum(ifelse(df$y_1 < df$y_0, 0, 1))
-# b = sum(ifelse(df$y_1 - 1000 > df$y_0, 1, 0))
-# a+b
-#Option 3
-#df$decision = df$treatment
-
+df$decision = ifelse((df$treatment==1 & df$y_1 > df$y_0 )|(df$treatment==0 & df$y_1-1000> df$y_0),1,0)
 
 
 df = df %>%
