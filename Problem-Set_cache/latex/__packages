@@ -4,3 +4,5 @@ dplyr
 fixest
 ivreg
 ggplot2
+data.table
+kableExtra

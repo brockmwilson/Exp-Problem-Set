@@ -8,7 +8,8 @@ output:
 
 ```{R, echo = FALSE}
 library(pacman)
-p_load(dplyr, fixest, ivreg, ggplot2)
+p_load(dplyr, fixest, ivreg, ggplot2, data.table, kableExtra)
+#knitr::opts_chunk(cache = TRUE)
 ```
 
 
@@ -33,8 +34,13 @@ y_1 = rnorm(n = size, mean = 21500, sd = 8000)
 df = data.frame(y_0, y_1)
 ```
 
+\newpage
 
-1. What is the average treatment effect in your sample? How does it compare to the true average treatment effect?
+## Part 1
+
+What is the average treatment effect in your sample? How does it compare to the true average treatment effect?
+
+### Solution:
 
 True Average Treatment Effect is 1500
 
@@ -53,7 +59,11 @@ Difference between True Average Treatment Effect and Sample Average Treatment Ef
 1500 - ate
 ```
 
-2. What is the distribution of compliers, always takers, and never takers in your sample (i.e. what is P(A), P(C), and P(N))?
+## Part 2
+
+What is the distribution of compliers, always takers, and never takers in your sample (i.e. what is P(A), P(C), and P(N))?
+
+### Solution: 
 
 ```{R}
 #Always Takers
@@ -89,10 +99,18 @@ percent[1,3] = df %>%
 
 percent$sum = sum(percent[1,])
 
-percent
+percent %>%
+  kbl(caption = "Distribution of Types (Part 2)",
+      col.names = c("Always Takers","Never Takers", "Compliers", "Sum")) %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(latex_options = "HOLD_position")
 ```
 
-3. What is the average impact of the training for compliers, always takers, and never takers in your sample?
+## Part 3 
+
+What is the average impact of the training for compliers, always takers, and never takers in your sample?
+
+### Solution: 
 
 ```{R}
 #Average Impact of Training
@@ -110,12 +128,21 @@ impact[1,3] = df %>%
   filter(y_1 - y_0 >= 0) %>%
   summarize(compliers = mean(y_1) - mean(y_0))
 
-impact
+impact %>%
+  kbl(caption = "Average Impact of Types (Part 3)",
+      col.names = c("Always Takers","Never Takers", "Compliers")) %>%
+  kable_classic(full_width = F, html_font = "Cambria") %>%
+  kable_styling(latex_options = "HOLD_position")
+
 
 impact[1,1] * percent[1,1] + impact[1,2] * percent[1,2] + impact[1,3] * percent[1,3]
 ```
 
-4. Why is it reasonable to assume there are no defiers given our assumptions about how people are making participation decisions?
+## Part 4 
+
+Why is it reasonable to assume there are no defiers given our assumptions about how people are making participation decisions?
+
+### Solution:
 
 It is reasonable to assume there are no defiers given our assumption because individuals are either better off with treatment (always-takers), without treatment (never-takers), or with treatment if provided (compliers). Specifically to be a defier, it must be the case that:
 
@@ -125,10 +152,7 @@ Defiers choose to not go to college if in treatment which implies $Y_1 < Y_0$
 
 Thus to be a defier, it must be that $0 > Y_1 - Y_0 > 1000$ which is impossible.
 
-
 \newpage
-
-
 
 So far, we have been using the full sample because we observe both potential outcomes. Now, let’s pretend we are in the real world and only observe the outcome that results from someone’s participation decision. To this end, randomly assign half of your sample to a treatment group and half to a control group. Generate an indicator P that equals 1 if someone receives the training and 0 otherwise. Remember: we have assumed people make participation decisions entirely based on their earnings with or without the training less any costs of the training. This should depend on the observations treatment status.
 
@@ -141,29 +165,19 @@ $$
 ```{R, warning = FALSE}
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 
-#Option 1
-
-# df$decision = if (df$treatment == 1) {
-#   ifelse(df$y_1-1000>df$y_0, 1, 0)
-# } else {
-#   ifelse(df$y_1>df$y_0, 1, 0)
-# }
-
-#Option 2
-
-df$decision = df$treatment #Compliers
-df$decision = ifelse(df$y_1 < df$y_0, 0, 1) #Never Takers
-df$decision = ifelse(df$y_1 - 1000 > df$y_0, 1, 0) #Always Takers
-
-# a = sum(ifelse(df$y_1 < df$y_0, 0, 1))
-# b = sum(ifelse(df$y_1 - 1000 > df$y_0, 1, 0))
-# a+b
+df = data.table(df)
+df[treatment == 1, decision := ifelse(y_1 > y_0, 1, 0)]
+df[treatment == 0, decision := ifelse(y_1 - 1000 > y_0, 1, 0)]
 
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
 ```
 
-5. Use a regression to estimate the intent-to-treat effect in your sample. What is the point estimate and the 95% confidence interval around the estimate?
+## Part 5
+
+Use a regression to estimate the intent-to-treat effect in your sample. What is the point estimate and the 95% confidence interval around the estimate?
+
+### Solution: 
 
 ```{R}
 sum1 = summary(lm(data = df, y ~ treatment))
@@ -173,34 +187,42 @@ c = sum1$coefficients[2,1] + 2*sum1$coefficients[2,2]
 a = sum1$coefficients[2,1] - 2*sum1$coefficients[2,2]
 
 table = cbind(a,b,c)
-colnames(table) = c("Lower Bound", "Estimate", "Upper Bound")
+colnames(table) = c("Lower Bound","Estimate", "Upper Bound")
 table
+
+
+# table %>%
+#   kbl(caption = "95% Confidence Interval (Part 5)",
+#       col.names = c("Lower Bound","Estimate", "Upper Bound")) %>%
+#   kable_classic(full_width = F, html_font = "Cambria")
 ```
 
-6. Use two-stage least squares to estimate the local average treatment effect in your sample. Comment on the point estimate and the 95% confidence interval around the estimate. How does this compare to the effects we estimated earlier in this problem?
+## Part 6 
 
-Solution:
+Use two-stage least squares to estimate the local average treatment effect in your sample. Comment on the point estimate and the 95% confidence interval around the estimate. How does this compare to the effects we estimated earlier in this problem?
 
-ALSO COULD BE A RELEVANCE ISSUE??
+### Solution:
 
-The confidence interval and point estimate are significantly different from problem 5. This is due to a weak instrument. The problem is that we are instrumenting decision with treatment, however treatment is a weak instrument. We can see this one of two ways. In the summary of the IV regression, we see that treatment is a weak instrument. Additionally, we can take a look at the first stage regression. Both show the same result, that treatment is weak instrument. This is a problem because a weak instrument will be biased, but be consistent as n approaches infinity. Additionally, the estimated standard error will be too small. I add in a grab to show the distribution of the estimates which has a wider distribution compared to the OLS estimates.
+Using OLS, we get a smooth distribution of the treatment effect. However with the IV, we get a wider range of results because treatment is random and so we may be selecting only never takers or always takers and this will skew our results. The two graphs below show the distributions of each.
 
 ```{R}
 #2SLS Regression
 sum1 = summary(ivreg(data = df, y ~ decision | treatment))
 sum1
 
-summary(lm(data = df, decision ~ treatment))
-
 b = sum1$coefficients[2,1]
 c = sum1$coefficients[2,1] + 2*sum1$coefficients[2,2]
 a = sum1$coefficients[2,1] - 2*sum1$coefficients[2,2]
 
 table = cbind(a,b,c)
-colnames(table) = c("Lower Bound", "Estimate", "Upper Bound")
+colnames(table) = c("Lower Bound","Estimate", "Upper Bound")
 table
-```
 
+#table %>%
+#  kbl(caption = "95% Confidence Interval (Part 6)",
+#      col.names = c("Lower Bound","Estimate", "Upper Bound")) %>%
+#  kable_classic(full_width = F, html_font = "Cambria")
+```
 
 ```{R, warning = FALSE, cache = TRUE}
 size = 1000
@@ -215,9 +237,9 @@ y_1 = rnorm(n = size, mean = 21500, sd = 8000)
 df = data.frame(y_0, y_1)
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 
-df$decision = df$treatment #Compliers
-df$decision = ifelse(df$y_1 < df$y_0, 0, 1) #Never Takers
-df$decision = ifelse(df$y_1 - 1000 > df$y_0, 1, 0) #Always Takers
+df= data.table(df)
+df[treatment == 1, decision := ifelse(y_1 > y_0, 1, 0)]
+df[treatment == 0, decision := ifelse(y_1 - 1000 > y_0, 1, 0)]
 
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
@@ -237,11 +259,15 @@ ggplot(dist2, aes(x=EstimatesIV)) +
 ```
 
 
-7. Re-run your code but drawing a sample of 1,000,000 observations instead of 10,000. How does the estimated LATE compare to the earlier treatment effects now?
+## Part 7 
 
-The estimated LATE is no better off as we increase the sample size. This is because of the problem before, we have a weak instrument.
+Re-run your code but drawing a sample of 1,000,000 observations instead of 10,000. How does the estimated LATE compare to the earlier treatment effects now?
 
-```{R, warning = FALSE}
+### Solution
+
+Here we are able to get a better estimate of the effects of treatment because we have a high enough sample size.
+
+```{R, warning = FALSE, cache = TRUE}
 size = 1000000
 y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
@@ -249,23 +275,9 @@ df = data.frame(y_0, y_1)
 
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 
-#Option 1
-# 
-# df$decision1 = if (df$treatment == 1) {
-#   ifelse(df$y_1>df$y_0, 1, 0)
-# } else {
-#   ifelse(df$y_1 - 1000>df$y_0, 1, 0)
-# }
-
-#Option 2
-df= data.table::data.table(df)
-p_load(data.table)
+df = data.table(df)
 df[treatment == 1, decision := ifelse(y_1 > y_0, 1, 0)]
 df[treatment == 0, decision := ifelse(y_1 - 1000 > y_0, 1, 0)]
-
-# Option 3
-df$decision = ifelse((df$treatment==1 & df$y_1 > df$y_0 )|(df$treatment==0 & df$y_1-1000> df$y_0),1,0)
-
 
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
@@ -280,23 +292,18 @@ summary(ivreg(data = df, y ~ decision | treatment))
 
 Suppose a researcher is evaluating an experiment using a sample that consists of 50% compliers, 25% always takers, and 25% never takers. The researcher decides to estimate the intent-to-treat effect but dropping people who did not comply with the treatment protocol from the sample. After dropping people who did not comply with their treatment assignment from the sample, what is the distribution of compliers, always takers, and never takers in the treatment group? In the control group? Why is this a problem?
 
-Solution:
+### Solution:
 
 There would be no never takers in the treatment group (since they wouldn't comply with treatment), all of the always takers who were selected for treatment and all of the compliers who were selected for treatment. In the control group, there would be no always takers, some of the never takers who were selected for control and all of the compliers who were selected for treatment. 
 
 This is a problem because we are still including the effect of never takers and always takers in our treatment effect. What we truly want to know is the effect of treatment for specifically those who complied. Never takers and always takers may skew our results and/or make our results not as generalizable. 
 
-This is illustrated well in Problem 1. If it is the case that by randomization, only never takers are in the control group and compliers in the treatment group, then we will see a negative effect. This is because the never takers have a high income without community college and compliers will often have a lower return from community college.
-
 \begin{align*}
 E(Y_{1,i} - Y_{0,i} | T_i) &= E(Y_{1,i}|T_i) - E(Y_{0,i}|T_i) \\
-&= [P(C)*E(Y_{1,C}|T_i) + P(A)*E(Y_{1,A}|T_i)] - [P(C)*E(Y_{1,C}|T_i) + P(N)*E(Y_{1,N}|T_i)]
+&= [P(C)*E(Y_{1,C}|T_i) + P(A)*E(Y_{1,A}|T_i)] - [P(C)*E(Y_{0,C}|T_i) + P(N)*E(Y_{0,N}|T_i)]
 \end{align*}
 
-We can see that our expected value still contains 
-
-
-CHECK
+We can see that our expected value still contains the effect of always takers and never takers which may be a problem when we interpet results.
 
 \newpage
 
@@ -304,7 +311,11 @@ CHECK
 
 Table 1 below includes details about the total sample size, probability of treatment, and treatment effect within each of 5 blocks. What would the pooled treatment effect be if estimated using an OLS regression of the outcome on treatment and block fixed effects? How much weight does each block get in the pooled estimate?
 
+# Solution
+
 CHECK
+
+The pooled treatment effect is 1.14. The weights of blocks 1-5 are 15.8%, 11.8%, 31.6%, 23.7%, and 17.1%.
 
 ```{R}
 block = seq(1:5)
@@ -324,10 +335,13 @@ total_var = sum(table$block_variance)
 #Weights for each block
 table$weights = table$block_variance/total_var
 
+table
+
+#Sum of weights
+sum(table$weights)
+
 #Pooled Treatment Effect
 sum(table$weights*table$treatment_effect)
-
-table
 ```
 
 \newpage
@@ -438,9 +452,6 @@ $$
 
 For both of our answers, as our $R^2$ goes up, then the square rooted term becomes smaller. This means that we can detect a smaller $\delta$. This is good because before we may have detected an effect of 0.10, but now we could detect an effect of 0.09.
 
-CHECK!
-
-
 \newpage
 
 # Problem 5
@@ -455,6 +466,8 @@ Discuss why this rule implies that the variance of treatment effects is not iden
 
 Propose an additional assumption that would allow you to identify the variance of treatment effects. Is it plausible?
 
+### Solution: 
+
 
 $$
 Var(Y_{i,1}-Y_{i,0}|T_i) = Var(Y_{i,1}|T_i) + Var(Y_{i,0}|T_i) - 2Cov(Y_{i,1},Y_{i,0}|T_i)
@@ -464,7 +477,7 @@ $$
 Cov(Y_{i,1},Y_{i,0}|T_i) = E(Y_{i,1},Y_{i,0}|T_i) - E(Y_{i,0}|T_i)*E(Y_{i,1}|T_i)
 $$
 
-Unfortunately to take the expected value of $E(Y_{i,1},Y_{i,0}|T_i)$, we need to know the joint probability distribution.
+Unfortunately for $E(Y_{i,1},Y_{i,0}|T_i)$, we need to know the joint probability distribution.
 
 To solve this, I propose: $Y_{i,1},Y_{i,0}$ are independent given $T_i$. This implies that:
 
