@@ -25,13 +25,13 @@ Y_1 \sim N(21500, 8000^2)
 \end{align*}
 
 ```{R}
+set.seed(1)
 size = 10000
 
 y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
-decision = ifelse(y_1 > y_0 - 1000, 1, 0)
 
-df = data.frame(y_0, y_1, decision)
+df = data.frame(y_0, y_1)
 ```
 
 
@@ -141,6 +141,13 @@ $$
 
 ```{R}
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
+
+df$decision = if (df$treatment == 1) {
+  ifelse(df$y_1-1000>df$y_0, 1, 0)
+} else {
+  ifelse(df$y_1>df$y_0, 1, 0)
+}
+
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
 ```
@@ -163,9 +170,11 @@ table
 
 ASK ABOUT!
 
+THIS IS A PROBLEM BC OF THE WEAK INSTRUMENTS
+
 ```{R}
 #2SLS Regression
-ivreg(data = df, y ~ treatment | decision)
+summary(ivreg(data = df, y ~ decision | treatment))
 ```
 
 ```{R}
@@ -178,8 +187,7 @@ colnames(dist2) = "EstimatesIV"
 for (i in 1:1000){
 y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
-decision = ifelse(y_1 > y_0 - 1000, 1, 0)
-df = data.frame(y_0, y_1, decision)
+df = data.frame(y_0, y_1)
 df$treatment = rbinom(n = size, size = 1, prob = 0.5)
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
@@ -207,13 +215,23 @@ FIGURE OUT
 size = 1000000
 y_0 = rnorm(n = size, mean = 20000, sd = 7000)
 y_1 = rnorm(n = size, mean = 21500, sd = 8000)
-decision = ifelse(y_1 > y_0 - 1000, 1, 0)
-df = data.frame(y_0, y_1, decision)
-df$treatment = rbinom(n = size, size = 1, prob = 0.5)
+df = data.frame(y_0, y_1)
+
+#df$treatment = rbinom(n = size, size = 1, prob = 0.5)
+df$treatment = 0
+df$treatment[1:500000] = 1
+
+df$decision = if (df$treatment == 1) {
+  ifelse(df$y_1-1000>df$y_0, 1, 0)
+} else {
+  ifelse(df$y_1>df$y_0, 1, 0)
+}
+
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
+
 summary(lm(data = df, y ~ treatment))
-ivreg(data = df, y ~ treatment | decision)
+summary(ivreg(data = df, y ~ decision | treatment))
 ```
 
 CHECK CHECK CHECK CHECK CHECK CHECK CHECK
@@ -356,7 +374,7 @@ $$
 $$
 
 $$
-\delta = 0.02489066 * \sqrt(1-R^2)
+\delta = 0.02489066 * \sqrt(1-0.2) = 0.02226288
 $$
 
 
@@ -366,7 +384,7 @@ $$
 $$
 
 $$
-\delta = 0.1048637 * \sqrt(1-R^2)
+\delta = 0.1048637 * \sqrt(1-0.2) = 0.09379294
 $$
 
 For both of our answers, as our $R^2$ goes up, then the square rooted term becomes smaller. This means that we can detect a smaller $\delta$. This is good because before we may have detected an effect of 0.10, but now we could detect an effect of 0.09.
@@ -389,12 +407,25 @@ Discuss why this rule implies that the variance of treatment effects is not iden
 Propose an additional assumption that would allow you to identify the variance of treatment effects. Is it plausible?
 
 
+$$
+Var(Y_{i,1}-Y_{i,0}|T_i) = Var(Y_{i,1}|T_i) + Var(Y_{i,0}|T_i) - 2Cov(Y_{i,1},Y_{i,0}|T_i)
+$$
 
+$$
+Cov(Y_{i,1},Y_{i,0}|T_i) = E(Y_{i,1},Y_{i,0}|T_i) - E(Y_{i,0}|T_i)*E(Y_{i,1}|T_i)
+$$
 
+Unfortunately to take the expected value of $E(Y_{i,1},Y_{i,0}|T_i)$, we need to know the joint probability distribution.
 
+To solve this, I propose: $Y_{i,1},Y_{i,0}$ are independent given $T_i$. This implies that:
 
+$$
+E(Y_{i,1},Y_{i,0}|T_i) = E(Y_{i,0}|T_i)*E(Y_{i,1}|T_i)
+$$
 
+which implies that $Cov(Y_{i,1},Y_{i,0}|T_i) = 0$.
 
+Independence of outcomes is a strong assumption to make. Consider the example of treating individuals with medication for obesity. It could be likely that those who lost the most weight from treatment are also the same individuals who would lose the most weight without treatment (maybe due to motivation). This would induce positive correlation and null the assumption. This is one example, but it would be difficult to imagine a scenario where independence is satisfied.
 
 
 
