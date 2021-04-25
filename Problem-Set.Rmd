@@ -313,8 +313,6 @@ Table 1 below includes details about the total sample size, probability of treat
 
 # Solution
 
-CHECK
-
 The pooled treatment effect is 1.14. The weights of blocks 1-5 are 15.8%, 11.8%, 31.6%, 23.7%, and 17.1%.
 
 ```{R}
