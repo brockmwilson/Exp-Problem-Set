@@ -203,7 +203,7 @@ Use two-stage least squares to estimate the local average treatment effect in yo
 
 ### Solution:
 
-Using OLS, we get a smooth distribution of the treatment effect. However with the IV, we get a wider range of results because treatment is random and so we may be selecting only never takers or always takers and this will skew our results. The two graphs below show the distributions of each.
+Using OLS, we get a smooth distribution of the treatment effect. However with the IV, we get a wider range of results because treatment is random and so we may be selecting only never takers or always takers and this will skew our results. The two graphs below show the distributions of each. This is most likely due to a weak instrument which is due to the fact that we have a low population of compliers in our sample (only 4% of 10,000 or 400 compliers).
 
 ```{R}
 #2SLS Regression
@@ -265,7 +265,7 @@ Re-run your code but drawing a sample of 1,000,000 observations instead of 10,00
 
 ### Solution
 
-Here we are able to get a better estimate of the effects of treatment because we have a high enough sample size.
+Here we are able to get a better estimate of the effects of treatment because we have a high enough sample size and additionally our instruments are not weak (while the instruments in part 6 had a test statistic of 23 and 3 respectively, here we have test statistics of 1400 and 22). Our instrument is more effective now because we have a higher population of compliers so we can get more accurate results.
 
 ```{R, warning = FALSE, cache = TRUE}
 size = 1000000
