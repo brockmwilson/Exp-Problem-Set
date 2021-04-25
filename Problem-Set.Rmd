@@ -225,7 +225,7 @@ table
 ```
 
 ```{R, warning = FALSE, cache = TRUE}
-size = 1000
+size = 10000
 dist1 = data.frame(matrix(nrow = size, ncol = 1, data = 0))
 colnames(dist1) = "EstimatesOLS"
 dist2 = data.frame(matrix(nrow = size, ncol = 1, data = 0))
@@ -244,10 +244,10 @@ df[treatment == 0, decision := ifelse(y_1 - 1000 > y_0, 1, 0)]
 df = df %>%
   mutate(y = decision*y_1 + (1-decision)*y_0)
 a = summary(lm(data = df, y ~ treatment))
-b = ivreg(data = df, y ~ treatment | decision)
+b = summary(ivreg(data = df, y ~ decision | treatment))
 
 dist1[i,1] = a$coefficients[2,1]
-dist2[i,1] = b$coefficients[2]
+dist2[i,1] = b$coefficients[2,1]
 }
 
 ggplot(dist1, aes(x=EstimatesOLS)) + 
