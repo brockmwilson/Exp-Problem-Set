@@ -64,6 +64,17 @@ Difference between True Average Treatment Effect and Sample Average Treatment Ef
 What is the distribution of compliers, always takers, and never takers in your sample (i.e. what is P(A), P(C), and P(N))?
 
 ### Solution: 
+$$
+P(C) = 3.8\%
+$$
+
+$$
+P(N) = 44.1\%
+$$
+
+$$
+P(A) = 52.1\%
+$$
 
 ```{R}
 #Always Takers
@@ -111,6 +122,14 @@ percent %>%
 What is the average impact of the training for compliers, always takers, and never takers in your sample?
 
 ### Solution: 
+
+Impact:
+
+Always Takers $= 9626.272$
+
+Never Takers $= -7977.59$
+
+Compliers $= 470.676$
 
 ```{R}
 #Average Impact of Training
@@ -203,7 +222,7 @@ Use two-stage least squares to estimate the local average treatment effect in yo
 
 ### Solution:
 
-Using OLS, we get a smooth distribution of the treatment effect. However with the IV, we get a wider range of results because treatment is random and so we may be selecting only never takers or always takers and this will skew our results. The two graphs below show the distributions of each. This is most likely due to a weak instrument which is due to the fact that we have a low population of compliers in our sample (only 4% of 10,000 or 400 compliers).
+Using OLS, we get a smooth distribution of the treatment effect. However with the IV, we get a wider range of results because treatment is random and so we may be selecting only never takers or always takers and this will skew our results. The two graphs below show the distributions of each. This is most likely due to a weak instrument which is due to the fact that we have a low population of compliers in our sample (only 4% of 10,000 or 400 compliers) and because we may be selecting certain segments of the never taker and always taker population. If we selected the best off Never Takers (as control subjects) and the worst off Always Takers (as treatment subjects) then we would expect a high negative result. This also works vice versa and we would expect a high positive result which explains the distribution of estimates.
 
 ```{R}
 #2SLS Regression
@@ -265,7 +284,7 @@ Re-run your code but drawing a sample of 1,000,000 observations instead of 10,00
 
 ### Solution
 
-Here we are able to get a better estimate of the effects of treatment because we have a high enough sample size and additionally our instruments are not weak (while the instruments in part 6 had a test statistic of 23 and 3 respectively, here we have test statistics of 1400 and 22). Our instrument is more effective now because we have a higher population of compliers so we can get more accurate results.
+Here we are able to get a better estimate of the effects of treatment because we have a high enough sample size and additionally our instruments are stronger (while the instruments in part 6 had a test statistic of 23 and 3 respectively, here we have test statistics of 1400 and 22). Additionally, our instrument is more effective now because we have a higher population of compliers so we can get more accurate results and we are less likely to get a situation where the never takers/always takers are the worst/best off (which could biased results in our estimate).
 
 ```{R, warning = FALSE, cache = TRUE}
 size = 1000000
@@ -296,7 +315,7 @@ Suppose a researcher is evaluating an experiment using a sample that consists of
 
 There would be no never takers in the treatment group (since they wouldn't comply with treatment), all of the always takers who were selected for treatment and all of the compliers who were selected for treatment. In the control group, there would be no always takers, some of the never takers who were selected for control and all of the compliers who were selected for treatment. 
 
-This is a problem because we are still including the effect of never takers and always takers in our treatment effect. What we truly want to know is the effect of treatment for specifically those who complied. Never takers and always takers may skew our results and/or make our results not as generalizable. 
+This is a problem because we are still including the effect of never takers and always takers in our treatment effect. What we truly want to know is the effect of treatment for specifically those who complied. Never takers and always takers may skew our results and/or make our results not as generalizable. Imagine in our sample, we selected the worst never takers for control and the best always takers for treatment. Then our estimate would be overstated. Similarly, if we have the best never takers and the worst always takers then we would be understating our result.
 
 \begin{align*}
 E(Y_{1,i} - Y_{0,i} | T_i) &= E(Y_{1,i}|T_i) - E(Y_{0,i}|T_i) \\
